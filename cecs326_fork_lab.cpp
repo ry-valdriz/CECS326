@@ -1,10 +1,11 @@
 #include<iostream>
+#include<cstdio>
+#include<fstream>
 #include<stdio.h>
-#include<unistd.h>
-#include<stdlib.h>
-#include<cstd.lib>
+//#include<cstd.lib>
 #include<sys/wait.h>
 #include<sys/types.h>
+#include<unistd.h>
 
 using namespace std;
 
@@ -19,7 +20,7 @@ int main()
     cout << "Please enter a string to replace: ";
     cin >> target;
 
-    if(target == "!wq"){
+    if(target == "!wq"){ //check input for exit keyword
         stay = false;
         break;
     }
@@ -34,17 +35,22 @@ int main()
     }
 
     if(pid == 0){ //child process
+        cout << "Child Process" << endl;
+        cout << "Target: " << target << endl;
+        cout << "Replacement: " << replacement << endl;
         int count = 0;
         /**
          * Enter replacement algorithm
-         * 
+         *
          **/
 
         cout << "Count: " << count << endl;
-        _exit();//end of child process
-    } 
+        //exit();//end of child process
+        break;
+    }
 
     if(pid > 0 ){ //parent process
+        cout << "Parent Process" << endl;
         if(wait(0) == -1){
             perror("wait");
         }
@@ -59,16 +65,32 @@ int main()
 
 
 void replace(string target, string replacement){
-    ifstream article;
-    article.open("article.txt");
+    std::ifstream read_article;
+    read_article.open("article.txt");
 
-    if(!article.is_open()){
+    std::ofstream write_article;
+    write_article.open("article.txt");
+    //article.open("article.txt", ios::out | ios::in);
+
+    if(!read_article.is_open()){
+        cout << "article was not opened" << endl;
         return;
     }
 
-    string word;
+    string line;
 
-    while(article >> word){
-        if(word == target)
+    while(getline(read_article,line)){
+      size_t pos = line.find(target);
+      if (pos != std::string::npos){
+        line.replace(pos, target.length(), replacement);
+      }
     }
+
+    // while(article >> word){
+    //     if(word == target){
+    //
+    //     }
+    // }
+
+
 }
