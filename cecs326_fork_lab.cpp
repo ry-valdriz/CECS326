@@ -43,14 +43,38 @@ int main()
         int count = 0;
 
         ifstream read_file("articleTester.txt");
-        ofstream write_file("articleTester.txt");
+
+        if(!read_file.is_open()){ //check if file was opened
+          cout << "article was not opened" << endl;
+        }
 
         //replace(target, replacement); //old replace function
-        String fileContent = readFile(read_file);
+        string fileContent;
+
+        while(!read_file.eof()){// read contents of file
+          fileContent.push_back((char)read_file.get());
+        }
+
+        read_file.close();//close file reading stream
+
+        cout << "File Content: " << fileContent << endl;
+
         count = replace(fileContent, target, replacement);
 
+        ofstream write_file("articleTester.txt");
+
+        if(!write_file.is_open()){ //check if file was opened
+          cout << "article was not opened" << endl;
+        }
+
+        write_file << fileContent; //write to text file
+
         cout << "Count: " << count << endl;
+
         //exit();//end of child process
+        //close file streams
+
+        write_file.close();
         break;
     }
 
@@ -69,11 +93,7 @@ int main()
 }//end of main
 
 
-string readFile(ifstream& inputStream){
-  string content;
-  for(char ch; inputStream.get(ch); content.push_back(ch)){}
-  return content;
-}
+
 
 int replace(string& file_content, const string& target, const string& replacement){
   int count = 0; //counter for # of replacements
