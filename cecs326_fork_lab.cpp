@@ -10,7 +10,7 @@
 using namespace std;
 
 // void replace(string& target, string& replacement);
-string readFile(ifstream& is);
+//string readFile(ifstream& is);
 int replace(string& fileContent, const string& target, const string& replacement);
 
 int main()
@@ -61,15 +61,28 @@ int main()
 
         count = replace(fileContent, target, replacement);
 
+        //INJECTED BUG
+        if(count == 0){
+          while(true){
+            cout << "." << endl;
+            count = replace(fileContent, target, replacement);
+
+            cout << "Count: " << count << endl;
+          }
+        }//END OF INJECTED BUG
+
         ofstream write_file("articleTester.txt");
 
         if(!write_file.is_open()){ //check if file was opened
           cout << "article was not opened" << endl;
         }
 
+
+
         write_file << fileContent; //write to text file
 
         cout << "Count: " << count << endl;
+
 
         //exit();//end of child process
         //close file streams
